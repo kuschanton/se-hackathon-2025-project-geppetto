@@ -1,0 +1,4 @@
+.env
+.idea
+node_modules
+wizard-react/node_modules
