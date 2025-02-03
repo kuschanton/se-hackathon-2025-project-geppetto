@@ -1,4 +1,8 @@
 .env
 .idea
+dist
 node_modules
 wizard-react/node_modules
+fly.toml
+Dockerfile
+.dockerignore

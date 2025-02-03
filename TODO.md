@@ -2,24 +2,30 @@
 - [x] Endpoint to init
 - [x] Get flow JSON
 - [x] Get widgets to be converted
-  - HTTP +
-  - SendToFlex +
+  + HTTP
+  + SendToFlex
   - ConnectCallTo ?
   - FunctionCall ?
   - What else?
 - [x] Generate / extract
-  - generate descriptions (in plain English)
-  - extract URL
-  - extract HTTP method
-  - generate input model
-- [ ] Create agent via API
-  - Need prompt for that (can put anything for now)
+  + generate descriptions (in plain English)
+  + extract URL
+  + extract HTTP method
+  + generate input model
+- [x] Create agent via API
+- [ ] Put prompt in place
 - [x] Create tools via API
 - [ ] Connect to PN? (TwiML config)
 - [x] Build Wizard UI
-  - Ask for: agent name and ...
-  - Confirm submission
+  + Ask for: agent name and ...
+  + Confirm submission
+- [ ] Add some sort of API key for security
+- [x] Deploy backend
+- [ ] Create segment space and test AIA putting data there to see format  
+- [ ] Connect Call To converter
 
 ### Generic tasks
 - [x] Install helper function for Flex hand over
-- [ ] Create a function for call forwarding ?
+
+### Testing
+- [ ] Flex handover

@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */
@@ -107,5 +109,9 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "wizard-react"  // Add this line to exclude the wizard-react directory
+  ]
 }

@@ -20,7 +20,7 @@ const convertSendToFlex = async (widget: SendToFlexWidget, assistantSid: string)
         assistantSid,
         'Flex Agent Handover',
         'You MUST use this if you don\'t know how to fulfill the request to let another customer service agent handle the conversation.',
-        `https://ai-assistants-samples-5252-qiunlp.twil.io/tools/flex-handover?FlexWorkspaceSid=${process.env.FLEX_WORKSPACE}&FlexWorkflowSid=${widget.properties.workflow}`,
+        `https://ai-assistants-samples-1281-fe00p2.twil.io/tools/flex-handover?FlexWorkspaceSid=${process.env.FLEX_WORKSPACE}&FlexWorkflowSid=${widget.properties.workflow}`,
         'POST',
         '{}'
     )
@@ -39,12 +39,21 @@ const convertMakeHttpRequest = async (widget: MakeHttpRequestWidget, flowDefinit
     )
 };
 
-// function convertConnectCallTo(widget: ConnectCallToWidget, assistantSid: string) {
-//     console.log("Converting connect-call-to widget:", widget);
-// }
+const convertConnectCallTo = async (widget: ConnectCallToWidget, flowDefinition: FlowDefinition, assistantSid: string) => {
+    console.log("Converting connect-call-to widget:", widget);
+
+    await createTool(
+        assistantSid,
+        widget.name,
+        await generateToolDescription(widget, flowDefinition),
+        `https://se-hackathon-2025.fly.dev/connect-call-to?number=${widget.properties.to.slice(1)}`,
+        'POST',
+        'export type Data = {}'
+    )
+};
 
 function convertRunFunction(widget: RunFunctionWidget, assistantSid: string) {
-    console.log("Converting run-function widget:", widget);
+    console.log("STUB >>> Converting run-function widget:", widget);
 }
 
 const convertWidget = async (widget: Widget, flowDefinition: FlowDefinition, assistantSid: string): Promise<void> => {
@@ -53,17 +62,15 @@ const convertWidget = async (widget: Widget, flowDefinition: FlowDefinition, ass
     console.log('==================================================')
     switch (widget.type) {
         case "send-to-flex":
-            // await convertSendToFlex(widget, assistantSid);
+            await convertSendToFlex(widget, assistantSid);
             break;
         case "make-http-request":
-            // await convertMakeHttpRequest(widget, flowDefinition, assistantSid);
+            await convertMakeHttpRequest(widget, flowDefinition, assistantSid);
             break;
         case "connect-call-to":
-            // console.log('convertWidget >>> converting', widget.type, widget)
-            // convertConnectCallTo(widget, assistantSid);
+            await convertConnectCallTo(widget, flowDefinition, assistantSid);
             break;
         case "run-function":
-            // console.log('convertWidget >>> converting', widget.type, widget)
             convertRunFunction(widget, assistantSid);
             break;
         default:

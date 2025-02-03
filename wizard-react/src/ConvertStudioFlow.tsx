@@ -7,7 +7,6 @@ import {
     Heading,
     Stack,
     Text,
-    Anchor,
 } from "@twilio-paste/core";
 import {ProductStudioIcon} from "@twilio-paste/icons/esm/ProductStudioIcon";
 import {ChevronDoubleRightIcon} from "@twilio-paste/icons/esm/ChevronDoubleRightIcon";
@@ -49,7 +48,7 @@ export const ConvertStudioFlow = () => {
         };
 
         try {
-            const response = await fetch("http://localhost:3001/convert", {
+            const response = await fetch("https://se-hackathon-2025.fly.dev/convert", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -176,7 +175,7 @@ export const ConvertStudioFlow = () => {
 
                     {/* Submit Button */}
                     <Box display="flex" justifyContent="flex-end">
-                        <Button variant="primary" type="submit" disabled={loading || !isFormValid} loading={loading}>
+                        <Button variant="primary" type="submit" disabled={!isFormValid} loading={loading}>
                             Submit
                         </Button>
                     </Box>

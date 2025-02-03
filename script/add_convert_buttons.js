@@ -51,7 +51,7 @@ if (tbody) {
                     // Add an event listener to the button to open a modal dialog
                     // Add an event listener to the button to open a modal dialog
                     wizardMenuItem.onclick = () => {
-                        const iframeUrl = `http://localhost:3000/?flowSid=${flowSid}`;
+                        const iframeUrl = `https://rcs-demo-ui-8712-dev.twil.io/index.html?flowSid=${flowSid}`;
                         console.log(`Opening wizard modal for Flow SID: ${flowSid}`);
 
                         // Create a modal overlay

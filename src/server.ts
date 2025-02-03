@@ -1,9 +1,9 @@
-import express, {Request, Response} from 'express';
-import {getAssistant, getStudioFlow} from "./services/TwilioClient";
+import express from 'express';
+import {connectCallTo, createAssistant, getAssistant, getStudioFlow} from "./services/TwilioClient";
 import {createToolsForFlow} from "./services/WidgetConverter";
-import {FlowInstance} from "twilio/lib/rest/studio/v2/flow";
 import {FlowDefinition} from "./model/Model";
 import cors from 'cors';
+import {generateAiAssistantPersonalityPrompt} from "./services/GptService";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -15,7 +15,7 @@ app.use(express.json());
 // Properly configure CORS
 app.use(
     cors({
-        origin: "http://localhost:3000", // Allow requests from this origin
+        origin: "https://rcs-demo-ui-8712-dev.twil.io", // Allow requests from this origin
         methods: ["GET", "POST", "OPTIONS"], // Allow these HTTP methods
         allowedHeaders: ["Content-Type"], // Allow these headers
     })
@@ -29,15 +29,29 @@ interface ConvertRequest {
     businessName: string;
 }
 
+app.get("/get-assistant", async (req, res) => {
+    await getAssistant('aia_asst_01948909-d7df-7801-b365-6b99e5a23fae')
+    res.status(200).json({status: 'OK'});
+})
+
+app.post("/connect-call-to", async (req, res) => {
+    const toPhoneNumber = req.query.number as string;
+    await connectCallTo(`+${toPhoneNumber}`)
+    res.status(200).json({status: 'OK'});
+})
+
 app.post('/convert', async (req, res) => {
     console.log('convert >>>', req.body)
     try {
 
         const request: ConvertRequest = req.body
-        // const flow = await getStudioFlow(request.flowSid)
-        // console.log('flowJson >>>', JSON.stringify(flow.definition, null, 2))
-        // await getAssistant('aia_asst_0194511f-3d39-7dd3-8224-58fbdb6e498a')
-        // await createToolsForFlow(flow.definition as FlowDefinition, 'aia_asst_0194511f-3d39-7dd3-8224-58fbdb6e498a')
+        const flow = await getStudioFlow(request.flowSid)
+        console.log('flow definition:', JSON.stringify(flow.definition).length)
+        console.log('flow definition:', JSON.stringify(flow.definition).substring(0, 50))
+        console.log('flow definition:', JSON.stringify(flow.definition).slice(-50))
+        const personalityPrompt = await generateAiAssistantPersonalityPrompt(flow.definition, request.agentName, request.businessName)
+        const assistantSid = await createAssistant(flow.friendlyName, personalityPrompt)
+        await createToolsForFlow(flow.definition as FlowDefinition, assistantSid)
 
 
         res.status(200).json({status: 'OK'});
