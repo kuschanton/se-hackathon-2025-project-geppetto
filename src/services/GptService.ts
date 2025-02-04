@@ -10,8 +10,6 @@ const openai = new OpenAIApi({apiKey: process.env.OPENAI_API_KEY})
 
 const getAiResponse = async (prompt: string): Promise<string> => {
 
-    // console.log('getAiResponse >>> prompt', prompt.substring(0, 30))
-
     const completion = await openai.chat.completions.create({
         model: 'gpt-4o',
         messages: [
@@ -20,11 +18,7 @@ const getAiResponse = async (prompt: string): Promise<string> => {
         ],
     })
 
-    const response = completion.choices[0].message.content!
-
-    // console.log('getAiResponse >>> response', response)
-
-    return response
+    return completion.choices[0].message.content!
 }
 
 export const generateToolName = async (widget: Widget, flowDefinition: FlowDefinition): Promise<string> => {

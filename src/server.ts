@@ -53,7 +53,6 @@ app.post('/convert', async (req, res) => {
         const assistantSid = await createAssistant(flow.friendlyName, personalityPrompt)
         await createToolsForFlow(flow.definition as FlowDefinition, assistantSid)
 
-
         res.status(200).json({status: 'OK'});
     } catch (err) {
         console.error('err >>>', err)

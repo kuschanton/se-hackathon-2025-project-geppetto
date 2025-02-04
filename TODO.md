@@ -4,7 +4,7 @@
 - [x] Get widgets to be converted
   + HTTP
   + SendToFlex
-  - ConnectCallTo ?
+  + ConnectCallTo ?
   - FunctionCall ?
   - What else?
 - [x] Generate / extract
@@ -22,7 +22,7 @@
 - [ ] Add some sort of API key for security
 - [x] Deploy backend
 - [ ] Create segment space and test AIA putting data there to see format  
-- [ ] Connect Call To converter
+- [x] Connect Call To converter
 
 ### Generic tasks
 - [x] Install helper function for Flex hand over
