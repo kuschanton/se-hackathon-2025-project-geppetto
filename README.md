@@ -46,17 +46,17 @@ The project is written in TypeScript and consists of two main modules: a Node.js
 
 ## Setting up
 
-0. If you need Flex Handover to work
-   0. deploy the Quick Deploy application here: https://www.twilio.com/code-exchange/ai-assistants-samples
-   0. once deployed lookup the Flex Handover URL (i.e. https://ai-assistants-samples-XXXX-XXXXXX.twil.io/tools/flex-handover) and use it in
-0. Update environment variables for backend (see the section below)
-0. Start or deploy backend using scripts
+1. If you don't need Flex Handover to work, skip to step 4.
+1. Deploy the Quick Deploy application here: https://www.twilio.com/code-exchange/ai-assistants-samples
+1. Once deployed lookup the Flex Handover URL (i.e. https://ai-assistants-samples-XXXX-XXXXXX.twil.io/tools/flex-handover) and use it in
+1. Update environment variables for backend (see the section below)
+1. Start or deploy backend using scripts
 1. If you just need conversion part (without frontend) you can stop here, you can initiate conversion using curl or if you are using IntelliJ you can leverage [request.http](http%2Frequest.http)
-0. Update environment variable REACT_APP_CONVERT_URL to point to backends `/convert` endpoint
-0. Start or deploy frontend using scripts
-0. Update the frontend URL in `[add_convert_buttons.js](script%2Fadd_convert_buttons.js)` on the line 54.
-0. In Chrome navigate to Studio Flows page, do Right Click > Inspect (on any element) and then paste the script into Chrome Console.
-0. Geppetto is ready! 
+1. Update environment variable REACT_APP_CONVERT_URL to point to backends `/convert` endpoint
+1. Start or deploy frontend using scripts
+1. Update the frontend URL in `[add_convert_buttons.js](script%2Fadd_convert_buttons.js)` on the line 54.
+1. In Chrome navigate to Studio Flows page, do Right Click > Inspect (on any element) and then paste the script into Chrome Console.
+1. Geppetto is ready! 
 
 ---
 
