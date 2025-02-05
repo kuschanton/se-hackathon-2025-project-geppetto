@@ -20,7 +20,7 @@ const convertSendToFlex = async (widget: SendToFlexWidget, assistantSid: string)
         assistantSid,
         'Flex Agent Handover',
         'You MUST use this if you don\'t know how to fulfill the request to let another customer service agent handle the conversation.',
-        `https://ai-assistants-samples-1281-fe00p2.twil.io/tools/flex-handover?FlexWorkspaceSid=${process.env.FLEX_WORKSPACE}&FlexWorkflowSid=${widget.properties.workflow}`,
+        `${process.env.FLEX_HANDOVER_URL}?FlexWorkspaceSid=${process.env.FLEX_WORKSPACE}&FlexWorkflowSid=${widget.properties.workflow}`,
         'POST',
         '{}'
     )
@@ -46,7 +46,7 @@ const convertConnectCallTo = async (widget: ConnectCallToWidget, flowDefinition:
         assistantSid,
         widget.name,
         await generateToolDescription(widget, flowDefinition),
-        `https://se-hackathon-2025.fly.dev/connect-call-to?number=${widget.properties.to.slice(1)}`,
+        `${process.env.BACKEND_BASE_URL}/connect-call-to?number=${widget.properties.to.slice(1)}`,
         'POST',
         'export type Data = {}'
     )

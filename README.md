@@ -10,7 +10,8 @@ Project Geppetto is our hackathon innovation that transforms legacy IVR systems 
 
 - [Overview](#overview)
 - [Project Structure](#project-structure)
-- [Configuration](#configuration)
+- [Setting up](#setting-up)
+- [Environment variables](#environment-variables)
 - [Scripts](#scripts)
 - [Limitations & Future Work](#limitations--future-work)
 
@@ -43,15 +44,35 @@ The project is written in TypeScript and consists of two main modules: a Node.js
 
 ---
 
-## Configuration
+## Setting up
+
+0. If you need Flex Handover to work
+   0. deploy the Quick Deploy application here: https://www.twilio.com/code-exchange/ai-assistants-samples
+   0. once deployed lookup the Flex Handover URL (i.e. https://ai-assistants-samples-XXXX-XXXXXX.twil.io/tools/flex-handover) and use it in
+0. Update environment variables for backend (see the section below)
+0. Start or deploy backend using scripts
+1. If you just need conversion part (without frontend) you can stop here, you can initiate conversion using curl or if you are using IntelliJ you can leverage [request.http](http%2Frequest.http)
+0. Update environment variable REACT_APP_CONVERT_URL to point to backends `/convert` endpoint
+0. Start or deploy frontend using scripts
+0. Update the frontend URL in `[add_convert_buttons.js](script%2Fadd_convert_buttons.js)` on the line 54.
+0. In Chrome navigate to Studio Flows page, do Right Click > Inspect (on any element) and then paste the script into Chrome Console.
+0. Geppetto is ready! 
+
+---
+
+## Environment variables
 
 The following environment variables are used to configure the application. A sample configuration can be found in the `.env-sample` file.
 
-| Variable          | Description                                                                                                                                                                                                                                                                                                                                                 |
-|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `ACCOUNT_SID`     | This is your Twilio Account SID, a unique identifier for your Twilio account. It is used to authenticate API requests and associate them with your account.
-| `AUTH_TOKEN`      | This is your Twilio Auth Token, a secret key used in conjunction with your Account SID to authenticate API requests.
-| `FLEX_WORKSPACE`  | This variable holds the SID of your Twilio Flex TaskRouter Workspace. It is needed to configure Flex Handover.
+| Variable            | Description                                                                                                                                                                                                                                                                                                                                                 |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ACCOUNT_SID`       | This is your Twilio Account SID, a unique identifier for your Twilio account. It is used to authenticate API requests and associate them with your account.
+| `AUTH_TOKEN`        | This is your Twilio Auth Token, a secret key used in conjunction with your Account SID to authenticate API requests.
+| `FLEX_WORKSPACE`    | This variable holds the SID of your Twilio Flex TaskRouter Workspace. It is needed to configure Flex Handover.
+| `FLEX_HANDOVER_URL` | This variable holds the URL of the Flex Handover endpoint from the Quick Deploy application.
+| `BACKEND_BASE_URL`  | This variable holds the URL of the backend.
+
+---
 
 ## Scripts
 

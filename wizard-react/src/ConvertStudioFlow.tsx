@@ -12,6 +12,8 @@ import {ProductStudioIcon} from "@twilio-paste/icons/esm/ProductStudioIcon";
 import {ChevronDoubleRightIcon} from "@twilio-paste/icons/esm/ChevronDoubleRightIcon";
 import {ProductAIAssistantsIcon} from "@twilio-paste/icons/esm/ProductAIAssistantsIcon";
 
+require('dotenv').config()
+
 export const ConvertStudioFlow = () => {
     // State for form fields
     const [agentName, setAgentName] = useState("");
@@ -48,7 +50,7 @@ export const ConvertStudioFlow = () => {
         };
 
         try {
-            const response = await fetch("https://se-hackathon-2025.fly.dev/convert", {
+            const response = await fetch(process.env.REACT_APP_CONVERT_URL!!, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

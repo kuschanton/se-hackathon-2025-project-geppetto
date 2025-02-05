@@ -15,7 +15,7 @@ app.use(express.json());
 // Properly configure CORS
 app.use(
     cors({
-        origin: "https://rcs-demo-ui-8712-dev.twil.io", // Allow requests from this origin
+        origin: "*", // Allows requests from any origin
         methods: ["GET", "POST", "OPTIONS"], // Allow these HTTP methods
         allowedHeaders: ["Content-Type"], // Allow these headers
     })
