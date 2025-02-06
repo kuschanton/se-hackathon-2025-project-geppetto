@@ -85,4 +85,11 @@ The `package.json` file includes several scripts to streamline development and d
 | `build`  | `tsc`                           | Runs the TypeScript compiler to transpile TypeScript files into JavaScript, outputting them in the `dist` directory.       |
 | `deploy` | `npm run build && fly deploy`   | First compiles the TypeScript files by running the `build` script, then deploys the application using the Fly.io platform. |
 
+## Limitations & Future Work
+
+Known issues:
+- [ ] For the [owl-properties-ivr.json](studio-flow%2Fowl-properties-ivr.json) flow used in demo, Geppetto produces inaccurate input schema for FetchAvailableProperties tool.
+Namely, it sets `"propertyType"` type to `"string"`, while in fact it is an enum `"house" | "townhome" | "apartment"`.
+Which leads AI Assistant to submitting whatever caller said, resulting in empty search result returned.
+The prompt has to be extended to identify enums and produce correct input schema. 
 

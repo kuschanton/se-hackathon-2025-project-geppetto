@@ -1,0 +1,1152 @@
+{
+  "description": "A New Flow",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "event": "incomingMessage"
+        },
+        {
+          "next": "ResidentOrProspect",
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingConversationMessage"
+        },
+        {
+          "event": "incomingRequest"
+        },
+        {
+          "event": "incomingParent"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 10,
+          "y": -100
+        }
+      }
+    },
+    {
+      "name": "ResidentOrProspect",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "ResidentOrProspectSplit",
+          "event": "keypress"
+        },
+        {
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "number_of_digits": 1,
+        "speech_timeout": "auto",
+        "offset": {
+          "x": 140,
+          "y": 90
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "Thanks for calling Owl Property Management! If you are a current resident, press 1. If you are interested in learning about our properties for rent, press 2.",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 7
+      }
+    },
+    {
+      "name": "ResidentOrProspectSplit",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "ResidentMenu",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.ResidentOrProspect.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "SelectPropertyType",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.ResidentOrProspect.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.ResidentOrProspect.Digits}}",
+        "offset": {
+          "x": 30,
+          "y": 390
+        }
+      }
+    },
+    {
+      "name": "ResidentMenu",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "ResidentMenuSplit",
+          "event": "keypress"
+        },
+        {
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "number_of_digits": 1,
+        "speech_timeout": "auto",
+        "offset": {
+          "x": -20,
+          "y": 710
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "To report an urgent issue, such as a water leak, press 1. To pay rent, press 2. To file a maintenence request, press 3. For lease renewals, press 4. For all other calls, press 5.",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 7
+      }
+    },
+    {
+      "name": "ResidentMenuSplit",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "ResidentMenu",
+          "event": "noMatch"
+        },
+        {
+          "next": "UrgentIssue",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "1-Urgent issue",
+              "arguments": [
+                "{{widgets.ResidentMenu.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "CallRentPay",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "2-Pay rent",
+              "arguments": [
+                "{{widgets.ResidentMenu.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "next": "Maintenence",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "3-Maintenance",
+              "arguments": [
+                "{{widgets.ResidentMenu.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "next": "Renewal",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "4-Renewal",
+              "arguments": [
+                "{{widgets.ResidentMenu.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "next": "Other",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "5-Other",
+              "arguments": [
+                "{{widgets.ResidentMenu.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "5"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.ResidentMenu.Digits}}",
+        "offset": {
+          "x": -260,
+          "y": 950
+        }
+      }
+    },
+    {
+      "name": "CallOncall",
+      "type": "connect-call-to",
+      "transitions": [
+        {
+          "event": "callCompleted"
+        },
+        {
+          "event": "hangup"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -690,
+          "y": 1440
+        },
+        "caller_id": "{{contact.channel.address}}",
+        "noun": "number",
+        "to": "+1234567890",
+        "timeout": 30
+      }
+    },
+    {
+      "name": "CallRentPay",
+      "type": "connect-call-to",
+      "transitions": [
+        {
+          "event": "callCompleted"
+        },
+        {
+          "event": "hangup"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -280,
+          "y": 1490
+        },
+        "caller_id": "{{contact.channel.address}}",
+        "noun": "number",
+        "to": "+1234567890",
+        "timeout": 30
+      }
+    },
+    {
+      "name": "UrgentIssue",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "CallOncall",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -690,
+          "y": 1230
+        },
+        "loop": 1,
+        "say": "If this is a life-threatening emergency, please hang up and dial 911. Otherwise please hold as we connect you to our urgent maintenence hotline."
+      }
+    },
+    {
+      "name": "PayRent",
+      "type": "say-play",
+      "transitions": [
+        {
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -340,
+          "y": 1230
+        },
+        "loop": 1,
+        "say": "Please hold while we connect you to our pay-by-phone rent line."
+      }
+    },
+    {
+      "name": "Maintenence",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "CallMaintenence",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 10,
+          "y": 1250
+        },
+        "loop": 1,
+        "say": "Please hold while we connect you to our maintenance department."
+      }
+    },
+    {
+      "name": "CallMaintenence",
+      "type": "connect-call-to",
+      "transitions": [
+        {
+          "event": "callCompleted"
+        },
+        {
+          "event": "hangup"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 70,
+          "y": 1490
+        },
+        "caller_id": "{{contact.channel.address}}",
+        "noun": "number",
+        "to": "+1234567890",
+        "timeout": 30
+      }
+    },
+    {
+      "name": "Renewal",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "CallRenewal",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 360,
+          "y": 1250
+        },
+        "loop": 1,
+        "say": "Please hold while we connect you to our office to discuss your lease renewal."
+      }
+    },
+    {
+      "name": "CallRenewal",
+      "type": "connect-call-to",
+      "transitions": [
+        {
+          "event": "callCompleted"
+        },
+        {
+          "event": "hangup"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 420,
+          "y": 1490
+        },
+        "caller_id": "{{contact.channel.address}}",
+        "noun": "number",
+        "to": "+1234567890",
+        "timeout": 30
+      }
+    },
+    {
+      "name": "CallOfficeOther",
+      "type": "connect-call-to",
+      "transitions": [
+        {
+          "event": "callCompleted"
+        },
+        {
+          "event": "hangup"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 740,
+          "y": 1500
+        },
+        "caller_id": "{{contact.channel.address}}",
+        "noun": "number",
+        "to": "+1234567890",
+        "timeout": 30
+      }
+    },
+    {
+      "name": "Other",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "CallOfficeOther",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 710,
+          "y": 1250
+        },
+        "loop": 1,
+        "say": "Please hold while we connect you to our office."
+      }
+    },
+    {
+      "name": "SelectPropertyType",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "SetPropertyType",
+          "event": "keypress"
+        },
+        {
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "number_of_digits": 1,
+        "speech_timeout": "auto",
+        "offset": {
+          "x": 620,
+          "y": 760
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "We are excited to help find the perfect rental for you! If you are interested in an apartment, press 1. For townhomes and duplexes, press 2. For single-family homes, press 3.",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "SetPropertyApartment",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "SelectNumBedrooms",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "Apartment",
+            "key": "property_type"
+          }
+        ],
+        "offset": {
+          "x": 1240,
+          "y": 830
+        }
+      }
+    },
+    {
+      "name": "SetPropertyType",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "SetPropertyApartment",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.SelectPropertyType.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "SetPropertyTownhouse",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.SelectPropertyType.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "next": "SetPropertyHouse",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 3",
+              "arguments": [
+                "{{widgets.SelectPropertyType.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "3"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.SelectPropertyType.Digits}}",
+        "offset": {
+          "x": 1140,
+          "y": 500
+        }
+      }
+    },
+    {
+      "name": "SetPropertyTownhouse",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "SelectNumBedrooms",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "Townhome",
+            "key": "property_type"
+          }
+        ],
+        "offset": {
+          "x": 1610,
+          "y": 850
+        }
+      }
+    },
+    {
+      "name": "SetPropertyHouse",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "SelectNumBedrooms",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "House",
+            "key": "property_type"
+          }
+        ],
+        "offset": {
+          "x": 1970,
+          "y": 840
+        }
+      }
+    },
+    {
+      "name": "SelectNumBedrooms",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "SetBedrooms",
+          "event": "keypress"
+        },
+        {
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "number_of_digits": 1,
+        "speech_timeout": "auto",
+        "offset": {
+          "x": 1220,
+          "y": 1340
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "Got it! Next, how many bedrooms are you looking for? For 1-bedroom, press 1. For 2-bedrooms, press 2. For 3-bedrooms, press 3. For 4 or more bedrooms, press 4.",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "SetBedrooms",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "Set1Bedroom",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.SelectNumBedrooms.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "Set2Bedrooms",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.SelectNumBedrooms.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "next": "Set3Bedrooms",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 3",
+              "arguments": [
+                "{{widgets.SelectNumBedrooms.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "next": "Set4Bedrooms",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 4",
+              "arguments": [
+                "{{widgets.SelectNumBedrooms.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "4"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.SelectNumBedrooms.Digits}}",
+        "offset": {
+          "x": 1740,
+          "y": 1350
+        }
+      }
+    },
+    {
+      "name": "Set1Bedroom",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "PetsYesNo",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "1",
+            "key": "number_of_bedrooms"
+          }
+        ],
+        "offset": {
+          "x": 1730,
+          "y": 1700
+        }
+      }
+    },
+    {
+      "name": "Set2Bedrooms",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "PetsYesNo",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "2",
+            "key": "number_of_bedrooms"
+          }
+        ],
+        "offset": {
+          "x": 2080,
+          "y": 1700
+        }
+      }
+    },
+    {
+      "name": "Set3Bedrooms",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "PetsYesNo",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "3",
+            "key": "number_of_bedrooms"
+          }
+        ],
+        "offset": {
+          "x": 2430,
+          "y": 1700
+        }
+      }
+    },
+    {
+      "name": "Set4Bedrooms",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "4",
+            "key": "number_of_bedrooms"
+          }
+        ],
+        "offset": {
+          "x": 2780,
+          "y": 1700
+        }
+      }
+    },
+    {
+      "name": "PetsYesNo",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "SetPets",
+          "event": "keypress"
+        },
+        {
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "number_of_digits": 1,
+        "speech_timeout": "auto",
+        "offset": {
+          "x": 1450,
+          "y": 2110
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "Great! Last question, do you have pets? Press 1 for yes, press 2 for no.",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "SetPets",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "SetPetsTrue",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.PetsYesNo.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "SetPetsFalse",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.PetsYesNo.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.PetsYesNo.Digits}}",
+        "offset": {
+          "x": 2030,
+          "y": 2120
+        }
+      }
+    },
+    {
+      "name": "SetPetsTrue",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "ConfirmSelections",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "Yes",
+            "key": "pets"
+          }
+        ],
+        "offset": {
+          "x": 2240,
+          "y": 2370
+        }
+      }
+    },
+    {
+      "name": "SetPetsFalse",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "ConfirmSelections",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "type": "string",
+            "value": "No",
+            "key": "pets"
+          }
+        ],
+        "offset": {
+          "x": 2630,
+          "y": 2370
+        }
+      }
+    },
+    {
+      "name": "ConfirmSelections",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "FetchAvailableProperties",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1630,
+          "y": 2620
+        },
+        "loop": 1,
+        "say": "Thank you! We are checking for any available {{flow.variables.number_of_bedrooms}} bedroom {{flow.variables.property_type}} properties for you."
+      }
+    },
+    {
+      "name": "FetchAvailableProperties",
+      "type": "make-http-request",
+      "transitions": [
+        {
+          "next": "SayAvailableProperties",
+          "event": "success"
+        },
+        {
+          "next": "say_play_4",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1620,
+          "y": 2870
+        },
+        "method": "GET",
+        "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+        "add_twilio_auth": false,
+        "parameters": [
+          {
+            "value": "{{flow.variables.property_type}}",
+            "key": "propertyType"
+          },
+          {
+            "value": "{{flow.variables.number_of_bedrooms}}",
+            "key": "numberOfBedrooms"
+          },
+          {
+            "value": "{{flow.variables.pets}}",
+            "key": "petsAllowed"
+          }
+        ],
+        "url": "https://airtableproxy-5498.twil.io/fetch-properties"
+      }
+    },
+    {
+      "name": "Copy_of_ResidentOrProspectSplit",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.ResidentYN.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.ResidentYN.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.ResidentYN.Digits}}",
+        "offset": {
+          "x": 2530,
+          "y": 2020
+        }
+      }
+    },
+    {
+      "name": "say_play_4",
+      "type": "say-play",
+      "transitions": [
+        {
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 2260,
+          "y": 2870
+        },
+        "loop": 1,
+        "say": "I'm sorry, we don't currently have any available properties meeting your criteria. Please try again another time or visit our website to view all available properties. Goodbye!"
+      }
+    },
+    {
+      "name": "SayAvailableProperties",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "ShowingYesNo",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1540,
+          "y": 3140
+        },
+        "loop": 1,
+        "say": "Great news, we have found a property that matches your search.\n\n{{widgets.FetchAvailableProperties.parsed.records[0].fields[\"Property Size\"]}} .\n\n{{widgets.FetchAvailableProperties.parsed.records[0].fields.Bedrooms}} bedrooms.\n\n{{widgets.FetchAvailableProperties.parsed.records[0].fields.Bathrooms}} bathrooms.\n\nPets Allowed: {{widgets.FetchAvailableProperties.parsed.records[0].fields[\"Pets Allowed\"]}}.\n\n{{widgets.FetchAvailableProperties.parsed.records[0].fields[\"Price per Month\"]}}\n\nAddress: {{widgets.FetchAvailableProperties.parsed.records[0].fields.Street}},\n{{widgets.FetchAvailableProperties.parsed.records[0].fields.City}},\n{{widgets.FetchAvailableProperties.parsed.records[0].fields.State}}.\n\nWould you like to book a showing?"
+      }
+    },
+    {
+      "name": "ShowingYesNo",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "ShowingYesNoSplit",
+          "event": "keypress"
+        },
+        {
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "speech_timeout": "auto",
+        "offset": {
+          "x": 1740,
+          "y": 3380
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "Press 1 if yes, press 2 if no.",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "ShowingYesNoSplit",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "send_to_flex_1",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.ShowingYesNo.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "GoodBye",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.ShowingYesNo.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.ShowingYesNo.Digits}}",
+        "offset": {
+          "x": 1280,
+          "y": 3640
+        }
+      }
+    },
+    {
+      "name": "send_to_flex_1",
+      "type": "send-to-flex",
+      "transitions": [
+        {
+          "event": "callComplete"
+        },
+        {
+          "event": "failedToEnqueue"
+        },
+        {
+          "event": "callFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1060,
+          "y": 4030
+        },
+        "workflow": "WWc66c124088b87cad377655a3f8230151",
+        "channel": "TC0fb6e88faeadaee747c5a2c162ec4389",
+        "attributes": "{}",
+        "priority": "0",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "GoodBye",
+      "type": "say-play",
+      "transitions": [
+        {
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1640,
+          "y": 4040
+        },
+        "loop": 1,
+        "say": "Goodbye!"
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}

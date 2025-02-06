@@ -13,7 +13,7 @@
   + extract HTTP method
   + generate input model
 - [x] Create agent via API
-- [ ] Put prompt in place
+- [x] Put prompt in place
 - [x] Create tools via API
 - [ ] Connect to PN? (TwiML config)
 - [x] Build Wizard UI
